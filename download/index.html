@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>universalUI: Download</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- M3 DYNAMIC THEME ENGINE --- */
+        :root {
+            --seed-h: 210;
+            --neutral-bg: #121212;
+            --neutral-surface: #1e1e1e;
+            
+            --md-primary: hsl(var(--seed-h), 80%, 70%);
+            --md-on-primary: hsl(var(--seed-h), 100%, 10%);
+            --md-primary-container: hsl(var(--seed-h), 50%, 25%);
+            --md-on-primary-container: hsl(var(--seed-h), 90%, 90%);
+            
+            --md-secondary-container: hsl(var(--seed-h), 20%, 30%);
+            --md-on-secondary-container: hsl(var(--seed-h), 80%, 90%);
+
+            --md-background: var(--neutral-bg);
+            --md-on-background: #e3e3e3;
+            
+            --md-surface: var(--neutral-surface);
+            --md-on-surface: #e3e3e3;
+            --md-surface-variant: hsl(var(--seed-h), 10%, 20%); 
+            --md-on-surface-variant: #c4c7c5;
+
+            --md-outline: #8c9199;
+            --m3-radius-xl: 28px;
+            --m3-radius-l: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Google Sans Flex', sans-serif;
+        }
+
+        body {
+            background-color: var(--md-background);
+            color: var(--md-on-background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.4s ease;
+        }
+
+        /* --- TOP APP BAR --- */
+        .top-app-bar {
+            width: 100%;
+            max-width: 600px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--md-background);
+        }
+
+        .app-bar-title {
+            font-size: 1.375rem;
+            font-weight: 400;
+        }
+
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .icon-btn:hover { background-color: rgba(255,255,255,0.08); }
+
+        /* --- LAYOUT --- */
+        .main-layout {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--md-primary);
+            margin-left: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- DOWNLOAD CARDS --- */
+        .m3-card {
+            background-color: var(--md-surface-variant);
+            border-radius: var(--m3-radius-xl);
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: background-color 0.4s ease;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .file-info h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: var(--md-on-surface-variant);
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* M3 Button Style */
+        .download-btn {
+            background-color: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 12px 24px;
+            border-radius: 100px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: transform 0.2s, background-color 0.4s;
+        }
+
+        .download-btn:active { transform: scale(0.95); }
+
+        .chip {
+            background-color: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .settings-dialog {
+            background: var(--md-surface);
+            background: color-mix(in srgb, var(--md-surface) 94%, var(--md-primary));
+            width: 90%;
+            max-width: 400px;
+            border-radius: 28px;
+            padding: 24px;
+        }
+
+        .theme-picker {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .color-dot {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: currentColor;
+            border: 3px solid transparent;
+        }
+        .color-dot.active { border-color: var(--md-on-surface); }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-app-bar anim-el">
+        <div class="app-bar-title">universalUI</div>
+        <div class="icon-btn" id="settingsBtn">
+            <span class="material-symbols-rounded">settings</span>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        
+        <div class="hero-block anim-el" style="padding: 20px 12px;">
+            <h1 style="font-size: 2rem;">Get universalUI</h1>
+            <p style="color: var(--md-on-surface-variant);">Official builds for Samsung Galaxy A32 4G (A325F).</p>
+        </div>
+
+        <div class="section-label anim-el">Latest Releases</div>
+
+        <div class="m3-card anim-card">
+            <div class="card-header">
+                <div class="file-info">
+                    <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+                        <span class="chip">STABLE</span>
+                    </div>
+                    <h3>universalUI R1</h3>
+                    <div class="file-meta">
+                        <span><span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle;">database</span> ? GB</span>
+                        <span><span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle;">calendar_month</span> ? 2026</span>
+                        <span><span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle;">build</span> ncatuong</span>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--md-primary); font-size: 32px;">android</span>
+            </div>
+            <a href="#" class="download-btn">
+                <span class="material-symbols-rounded">download</span>
+                download
+            </a>
+        </div>
+
+        <div class="m3-card anim-card">
+            <div class="card-header">
+                <div class="file-info">
+                    <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+                        <span class="chip" style="background: var(--md-primary-container);">X-VERSION</span>
+                    </div>
+                    <h3>universalUI X1</h3>
+                    <div class="file-meta">
+                        <span><span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle;">database</span> ? GB</span>
+                        <span>deGoogled • deKnoxed build</span>
+                        <span><span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle;">build</span> ncatuong</span>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--md-primary); font-size: 32px;">security_update_good</span>
+            </div>
+            <a href="#" class="download-btn">
+                <span class="material-symbols-rounded">download</span>
+                download
+            </a>
+        </div>
+
+
+    </div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="settings-dialog">
+            <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Appearance</h2>
+            <p style="color: var(--md-on-surface-variant); font-size: 0.9rem;">The entire UI adapts to your chosen color seed.</p>
+            
+            <div class="theme-picker">
+                <div class="color-dot active" style="color: #5293ea;" onclick="handleThemeChange(210, this)"></div>
+                <div class="color-dot" style="color: #69a875;" onclick="handleThemeChange(145, this)"></div>
+                <div class="color-dot" style="color: #d9b95b;" onclick="handleThemeChange(45, this)"></div>
+                <div class="color-dot" style="color: #e07872;" onclick="handleThemeChange(0, this)"></div>
+            </div>
+
+            <div style="text-align: right;">
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--md-primary); font-weight: 600; cursor: pointer; padding: 8px 16px;">DONE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Dynamic Theme ---
+        function handleThemeChange(hue, element) {
+            document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
+            element.classList.add('active');
+            setTheme(hue);
+        }
+
+        function setTheme(hue) {
+            const root = document.documentElement;
+            root.style.setProperty('--seed-h', hue);
+            root.style.setProperty('--md-primary', `hsl(${hue}, 80%, 70%)`);
+            root.style.setProperty('--md-primary-container', `hsl(${hue}, 50%, 25%)`);
+            root.style.setProperty('--md-on-primary-container', `hsl(${hue}, 90%, 90%)`);
+            root.style.setProperty('--md-secondary-container', `hsl(${hue}, 20%, 30%)`);
+            root.style.setProperty('--md-on-secondary-container', `hsl(${hue}, 80%, 90%)`);
+            root.style.setProperty('--md-background', `hsl(${hue}, 5%, 6%)`);
+            root.style.setProperty('--md-surface-variant', `hsl(${hue}, 10%, 18%)`);
+        }
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('settingsModal');
+        document.getElementById('settingsBtn').onclick = () => modal.style.display = 'flex';
+        document.getElementById('closeModalBtn').onclick = () => modal.style.display = 'none';
+
+        // --- Animations ---
+        window.addEventListener('DOMContentLoaded', () => {
+            anime.timeline({ easing: 'easeOutExpo' })
+            .add({
+                targets: '.anim-el',
+                opacity: [0, 1],
+                translateY: [-15, 0],
+                delay: anime.stagger(100),
+                duration: 600
+            })
+            .add({
+                targets: '.anim-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                delay: anime.stagger(120),
+                duration: 800
+            }, '-=300');
+        });
+    </script>
+</body>
+</html>
