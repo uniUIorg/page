@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>universalUI : Home</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- M3 DYNAMIC THEME ENGINE --- */
+        :root {
+            /* Default Seed: M3 Blue */
+            --seed-h: 210;
+            
+            /* Light/Dark Mode Neutral Bases (will be tinted by JS) */
+            --neutral-bg: #121212;
+            --neutral-surface: #1e1e1e;
+            
+            /* M3 Color Roles (Calculated placeholders) */
+            --md-primary: hsl(var(--seed-h), 80%, 70%);
+            --md-on-primary: hsl(var(--seed-h), 100%, 10%);
+            --md-primary-container: hsl(var(--seed-h), 50%, 25%);
+            --md-on-primary-container: hsl(var(--seed-h), 90%, 90%);
+            
+            --md-secondary-container: hsl(var(--seed-h), 20%, 30%);
+            --md-on-secondary-container: hsl(var(--seed-h), 80%, 90%);
+
+            --md-background: var(--neutral-bg);
+            --md-on-background: #e3e3e3;
+            
+            --md-surface: var(--neutral-surface);
+            --md-on-surface: #e3e3e3;
+            /* Tonal Surface for Cards */
+            --md-surface-variant: hsl(var(--seed-h), 10%, 20%); 
+            --md-on-surface-variant: #c4c7c5;
+
+            --md-outline: #8c9199;
+            
+            /* M3 Standard Radii */
+            --m3-radius-xl: 28px;
+            --m3-radius-l: 16px;
+            --m3-radius-m: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Google Sans Flex', sans-serif;
+        }
+
+        body {
+            background-color: var(--md-background);
+            color: var(--md-on-background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.4s ease;
+            position: relative;
+        }
+
+        /* --- TOP APP BAR (M3 Small) --- */
+        .top-app-bar {
+            width: 100%;
+            max-width: 600px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--md-background);
+        }
+
+        .app-bar-title {
+            font-size: 1.375rem;
+            font-weight: 400;
+        }
+
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(255,255,255,0.08);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-layout {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-bottom: 100px;
+        }
+
+        /* M3 Header Block */
+        .hero-block {
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            color: var(--md-on-background);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--md-on-surface-variant);
+            margin-top: 8px;
+        }
+
+        /* M3 Tonal Card */
+        .m3-card {
+            background-color: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border-radius: var(--m3-radius-xl);
+            padding: 24px;
+            opacity: 0; /* Anim start */
+            transform: translateY(30px);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: var(--md-on-surface);
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* List Items */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--md-outline);
+            border-color: color-mix(in srgb, var(--md-outline) 30%, transparent);
+        }
+        .feature-item:last-child { border-bottom: none; }
+
+        .feature-text {
+            font-size: 1rem;
+            color: var(--md-on-surface);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+            padding: 6px 12px;
+            border-radius: 16px;
+        }
+
+        /* --- SETTINGS MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .settings-dialog {
+            background: var(--md-surface);
+            /* Slight tint on surface for dialog elevation */
+            background: color-mix(in srgb, var(--md-surface) 92%, var(--md-primary));
+            width: 90%;
+            max-width: 400px;
+            border-radius: 28px;
+            padding: 24px;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .settings-dialog {
+            transform: scale(1);
+        }
+
+        .dialog-title {
+            font-size: 1.5rem;
+            color: var(--md-on-surface);
+            margin-bottom: 24px;
+        }
+
+        .theme-picker {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .color-dot {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            background: currentColor;
+            box-shadow: 0 0 0 4px transparent;
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        .color-dot:active { transform: scale(0.9); }
+        .color-dot.active {
+            box-shadow: 0 0 0 4px var(--md-on-surface);
+        }
+
+        /* FAB */
+        .fab-extended {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            height: 56px;
+            padding: 0 24px 0 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 90;
+            transform: translateY(100px);
+            transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.2s;
+        }
+        .fab-extended:hover { box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+
+        .material-symbols-rounded { font-size: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-app-bar anim-el">
+        <div class="app-bar-title">universalUI</div>
+        <div class="icon-btn" id="settingsBtn">
+            <span class="material-symbols-rounded">settings</span>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        
+        <div class="hero-block anim-el">
+            <h1>universalUI</h1>
+            <p class="hero-subtitle">
+                the ROM have minimalist and clean for Galaxy A32 4G.
+            </p>
+        </div>
+
+        <div class="m3-card anim-card">
+            <div class="card-title">
+                <span class="material-symbols-rounded filled">verified</span>
+                Features
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-text">high debloated</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-text">deKnoxed</span>
+                    <span class="badge">X ver.</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-text">deGoogled</span>
+                    <span class="badge">X ver.</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-text">universalUI's toolbox for overclock and tweaks'</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-text">included stablity + performance kernel</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="m3-card anim-card" style="padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;">
+             <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="material-symbols-rounded" style="color: var(--md-primary);">code</span>
+                <div>
+                    <div style="font-weight: 500; color: var(--md-on-surface);">ncatuong</div>
+                    <div style="font-size: 0.9rem;">creator of universalUI ROM.</div>
+            </div>
+        </div>
+
+        <div class="m3-card anim-card" style="padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;">
+             <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="material-symbols-rounded" style="color: var(--md-primary);">code</span>
+                <div>
+                    <div style="font-weight: 500; color: var(--md-on-surface);">LumiROM</div>
+                    <div style="font-size: 0.9rem;">base of universalUI ROM.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="settings-dialog">
+            <div class="dialog-title">Dynamic Color</div>
+            <p style="color: var(--md-on-surface-variant);">Pick a seed color to adapt the system theme.</p>
+            
+            <div class="theme-picker">
+                <div class="color-dot active" style="color: #5293ea;" onclick="handleThemeChange(210, this)"></div>
+                <div class="color-dot" style="color: #69a875;" onclick="handleThemeChange(145, this)"></div>
+                <div class="color-dot" style="color: #d9b95b;" onclick="handleThemeChange(45, this)"></div>
+                <div class="color-dot" style="color: #e07872;" onclick="handleThemeChange(0, this)"></div>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                 <div class="icon-btn" style="width: auto; padding: 0 16px; border-radius: 20px; font-weight: 500; color: var(--md-primary);" id="closeModalBtn">Close</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab-extended">
+        <span class="material-symbols-rounded">download</span>
+        Download ROM
+    </div>
+
+    <script>
+        // --- JS M3 Color Engine ---
+        function handleThemeChange(hue, element) {
+            // Update active dot UI
+            document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
+            element.classList.add('active');
+            
+            // Apply theme
+            setTheme(hue);
+
+            // Close modal slightly after selection for user feedback
+            setTimeout(() => {
+                 toggleModal(false);
+            }, 300);
+        }
+
+        function setTheme(hue) {
+            const root = document.documentElement;
+            root.style.setProperty('--seed-h', hue);
+            
+            // Recalculate roles based on new hue (Dark mode assumptions)
+            root.style.setProperty('--md-primary', `hsl(${hue}, 80%, 70%)`);
+            root.style.setProperty('--md-on-primary', `hsl(${hue}, 100%, 10%)`);
+            root.style.setProperty('--md-primary-container', `hsl(${hue}, 50%, 30%)`);
+            root.style.setProperty('--md-on-primary-container', `hsl(${hue}, 90%, 90%)`);
+            root.style.setProperty('--md-secondary-container', `hsl(${hue}, 30%, 35%)`);
+            root.style.setProperty('--md-on-secondary-container', `hsl(${hue}, 80%, 90%)`);
+            
+            // Tint background and surfaces slightly with the seed hue
+            root.style.setProperty('--md-background', `hsl(${hue}, 5%, 6%)`);
+            root.style.setProperty('--md-surface', `hsl(${hue}, 5%, 10%)`);
+            root.style.setProperty('--md-surface-variant', `hsl(${hue}, 10%, 18%)`);
+        }
+
+        // --- Modal Interactions ---
+        const modal = document.getElementById('settingsModal');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+
+        function toggleModal(show) {
+            if(show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
+        settingsBtn.addEventListener('click', () => toggleModal(true));
+        closeBtn.addEventListener('click', () => toggleModal(false));
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) toggleModal(false); // Close clicking outside dialog
+        });
+
+
+        // --- Entrance Animations ---
+        document.addEventListener('DOMContentLoaded', () => {
+            anime.timeline({
+                easing: 'easeOutExpo'
+            })
+            .add({
+                targets: '.anim-el',
+                opacity: [0, 1],
+                translateY: [-20, 0],
+                delay: anime.stagger(100),
+                duration: 800
+            })
+            .add({
+                targets: '.anim-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                delay: anime.stagger(150),
+                duration: 800,
+                easing: 'spring(1, 80, 10, 0)'
+            }, '-=400')
+             .add({
+                targets: '.fab-extended',
+                translateY: [100, 0],
+                duration: 800,
+                easing: 'spring(1, 80, 10, 0)'
+            }, '-=600');
+        });
+    </script>
+</body>
+</html>
